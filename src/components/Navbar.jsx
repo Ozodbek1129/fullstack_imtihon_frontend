@@ -10,11 +10,11 @@ export default function Navbar() {
     { href: "/aloqa", title: "Aloqa" },
   ];
   return (
-    <div className="flex justify-between items-center py-3 text-black px-10 shadow-md">
+    <div className="flex justify-between items-center py-3 text-black px-10 shadow-white ">
       <div>
         <Image src={"/Logo.svg"} width={200} height={50} alt="logo" />
       </div>
-      <div className="flex gap-5 text-orange-500">
+      <div className="flex gap-5 text-orange-500 max-lg:hidden">
         {nav &&
           nav.map((e, index) => (
             <Link key={index} href={e.href}>
