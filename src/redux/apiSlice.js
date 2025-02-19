@@ -16,29 +16,64 @@ export const apiSlice = createApi({
     getProducts: builder.query({
       query: () => "/products",
     }),
+    updateLike: builder.mutation({
+      query: ({ id, is_like }) => ({
+        url: `/products/${id}`,
+        method: "PATCH",
+        body: { is_like },
+        headers:{
+          "Content-Type": "application/json",
+        }
+      }),
+    }),
     getCategories: builder.query({
       query: () => "/categories",
     }),
     getUser: builder.query({
       query: () => "/users",
     }),
-    getUserById: builder.query({ 
+    getUserById: builder.query({
       query: (id) => `/users/${id}`,
     }),
     login: builder.mutation({
-      query: (body) => ({
+      query: () => ({
         url: "users/login",
         method: "POST",
         body,
       }),
     }),
+    getWishlist: builder.query({
+      query: () => `/wishlist?user_id=${1}`,
+    }),
+    addWishlist: builder.mutation({
+      query: ({ user_id, product_id }) => ({
+        url: "/wishlist",
+        method: "POST",
+        body: { user_id, product_id },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+    
+    deleteWishlist: builder.mutation({
+      query: (product_id) => ({
+        url: `/wishlist/${product_id}`,
+        method: "DELETE",
+      }),
+    }),
+    
   }),
 });
 
 export const {
-  useGetNewsQuery,
-  useGetEventQuery,
+  useGetProductsQuery,
+  useUpdateLikeMutation,
   useGetUserQuery,
-  useGetUserByIdQuery,  // ✅ Endpointni export qilish
+  useGetUserByIdQuery,
   useLoginMutation,
+  useGetCategoriesQuery,
+  useAddWishlistMutation,
+  useDeleteWishlistMutation,
+  useGetWishlistQuery,
 } = apiSlice;

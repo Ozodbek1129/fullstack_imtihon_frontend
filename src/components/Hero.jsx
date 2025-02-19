@@ -6,7 +6,9 @@ import TvOutlinedIcon from '@mui/icons-material/TvOutlined';
 import HeadphonesOutlinedIcon from '@mui/icons-material/HeadphonesOutlined';
 import WatchOutlinedIcon from '@mui/icons-material/WatchOutlined';
 import EarbudsOutlinedIcon from '@mui/icons-material/EarbudsOutlined';
+// import { useGetCategoriesQuery } from '@/redux/apiSlice';
 export default function Hero() {
+    // const {data, error, isLoading} = useGetCategoriesQuery()
     const category = [
         {title: "Telefonlar", href: "/telefonlar", icons: <SmartphoneIcon/>},
         {title: "Kompyuterlar", href: "/kompyuterlar", icons: <ComputerOutlinedIcon/>},
