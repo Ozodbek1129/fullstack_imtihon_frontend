@@ -18,7 +18,7 @@ export default function Hero() {
         {title: "Aksessuarlar", href: "/aksessuarlar", icons: <EarbudsOutlinedIcon/>},
     ]
   return (
-    <div className='py-10 bg-orange-400 text-white'>
+    <div className='py-10 bg-orange-500 text-white'>
         <div className='flex justify-around'>
             {category?.map((e, index)=>(
                 <Link className='flex flex-col  items-center ' key={index} href={e.href}>{e.icons}<span className='max-[575px]:text-[10px]'>{e.title}</span></Link>

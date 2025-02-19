@@ -12,6 +12,7 @@ import { useAddWishlistMutation, useDeleteWishlistMutation, useUpdateLikeMutatio
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 export default function MediaCard({ data = {} }) {
+  console.log("phone", data);
   let { id, name, description, image, is_like } = data;
 
   const [updateLike] = useUpdateLikeMutation();

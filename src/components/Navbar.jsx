@@ -1,14 +1,31 @@
+"use client"
+
 import Image from "next/image";
 import Link from "next/link";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import ComboBox from "./Search";
+import { useEffect, useState } from "react";
+import { useGetUserByIdQuery } from "@/redux/apiSlice";
 export default function Navbar() {
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedUserId = localStorage.getItem("userId");
+      setUserId(storedUserId);
+    }
+  }, []);
+
+  const { data: user, isLoading, error } = useGetUserByIdQuery(userId, {
+    skip: !userId,
+  });
   const nav = [
     { href: "/yangiliklar", title: "Yangiliklar" },
     { href: "/biz-haqimizda", title: "Biz haqimizda" },
     { href: "/aloqa", title: "Aloqa" },
   ];
+
   return (
     <div className="flex justify-between items-center py-3 text-black px-10 shadow-white ">
       <Link href={"/"}>
@@ -29,7 +46,25 @@ export default function Navbar() {
         <Link href={"/wishlist"}><FavoriteBorderOutlinedIcon/></Link>
         <Link href={"/cart"}><ShoppingCartOutlinedIcon/></Link>
         {/* <button>dark</button> */}
-        <Link className="border py-2 px-4 rounded-md bg-orange-500 text-white" href={"/"}>Login</Link>
+        <div>
+            {isLoading ? (
+              <p className="text-gray-300">Loading...</p>
+            ) : error || !user ? (
+              <Link href="/login" className="px-4 py-2 bg-orange-500 text-white rounded-md">
+                Login
+              </Link>
+            ) : (
+              <Link href="/profile">
+                <Image
+                  src={user.avatar ? `http://localhost:4000${user.avatar}` : "/default-avatar.png"}
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-full cursor-pointer"
+                  alt="Profile"
+                />
+              </Link>
+            )}
+          </div>
       </div>
     </div>
   );

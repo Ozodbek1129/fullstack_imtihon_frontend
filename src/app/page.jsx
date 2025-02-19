@@ -1,4 +1,5 @@
 import MediaCard from '@/components/Card'
+import Computers from '@/components/Computers'
 import Hero from '@/components/Hero'
 import Phone from '@/components/Phone'
 import React from 'react'
@@ -7,6 +8,7 @@ export default function page() {
     <div>
       <Hero/>
       <Phone/>
+      <Computers/>
     </div>
   )
 }

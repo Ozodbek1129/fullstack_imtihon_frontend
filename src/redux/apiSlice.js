@@ -14,7 +14,7 @@ export const apiSlice = createApi({
   }),
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: () => "/products",
+      query: () => `/products`,
     }),
     updateLike: builder.mutation({
       query: ({ id, is_like }) => ({
@@ -27,7 +27,7 @@ export const apiSlice = createApi({
       }),
     }),
     getCategories: builder.query({
-      query: () => "/categories",
+      query: (id) => `/categories/${id}`,
     }),
     getUser: builder.query({
       query: () => "/users",
@@ -36,8 +36,8 @@ export const apiSlice = createApi({
       query: (id) => `/users/${id}`,
     }),
     login: builder.mutation({
-      query: () => ({
-        url: "users/login",
+      query: (body) => ({
+        url: "/users/login",
         method: "POST",
         body,
       }),
