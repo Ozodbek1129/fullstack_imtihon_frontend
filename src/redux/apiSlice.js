@@ -21,13 +21,13 @@ export const apiSlice = createApi({
         url: `/products/${id}`,
         method: "PATCH",
         body: { is_like },
-        headers:{
+        headers: {
           "Content-Type": "application/json",
-        }
+        },
       }),
     }),
     getCategories: builder.query({
-      query: (id) => `/categories/${id}`,
+      query: (id) => `/categories/${id}/products`,
     }),
     getUser: builder.query({
       query: () => "/users",
@@ -39,6 +39,13 @@ export const apiSlice = createApi({
       query: (body) => ({
         url: "/users/login",
         method: "POST",
+        body,
+      }),
+    }),
+    updateUser: builder.mutation({
+      query: (body) => ({
+        url: `/users/${body.id}`,
+        method: "PATCH",
         body,
       }),
     }),
@@ -55,18 +62,29 @@ export const apiSlice = createApi({
         },
       }),
     }),
-    
+
     deleteWishlist: builder.mutation({
       query: (product_id) => ({
         url: `/wishlist/${product_id}`,
         method: "DELETE",
       }),
     }),
-    
+    getProductsByCategory: builder.query({
+      query: ({ id, page = 1, limit = 8 }) =>
+        `/products/category/${id}?page=${page}&limit=${limit}`,
+    }),
+    getAllCategory: builder.query({
+      query: ()=> "/categories"
+    }),
+    getOneProduct: builder.query({
+      query: (id)=> `/products/${id}`
+    }),
   }),
 });
 
 export const {
+  useGetAllCategoryQuery,
+  useGetOneProductQuery,
   useGetProductsQuery,
   useUpdateLikeMutation,
   useGetUserQuery,
@@ -76,4 +94,6 @@ export const {
   useAddWishlistMutation,
   useDeleteWishlistMutation,
   useGetWishlistQuery,
+  useUpdateUserMutation,
+  useGetProductsByCategoryQuery,
 } = apiSlice;

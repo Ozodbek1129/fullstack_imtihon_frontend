@@ -1,3 +1,4 @@
+"use client"
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -10,11 +11,11 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Link from "next/link";
 import { useAddWishlistMutation, useDeleteWishlistMutation, useUpdateLikeMutation } from "@/redux/apiSlice";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import { useRouter } from "next/navigation";
 
 export default function MediaCard({ data = {} }) {
-  console.log("phone", data);
   let { id, name, description, image, is_like } = data;
-
+const router = useRouter()
   const [updateLike] = useUpdateLikeMutation();
 const [addwishlist] = useAddWishlistMutation();
 const [deleteWishlist] = useDeleteWishlistMutation();
@@ -38,7 +39,9 @@ const [deleteWishlist] = useDeleteWishlistMutation();
     }
   };
   
-
+  const handleClick = (event) => {
+    router.push(`/product/${id}`);
+  };
   return (
     <Card sx={{ maxWidth: 250, border: "1px solid #FFA500" }}>
       <CardMedia
@@ -70,9 +73,9 @@ const [deleteWishlist] = useDeleteWishlistMutation();
         <button className="mt-2 text-red-500" onClick={handleLikeClick}>
           {liked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
         </button>
-        <Link href={"/details"} className="text-black">
+        <button onClick={handleClick} className="text-black">
           <RemoveRedEyeOutlinedIcon />
-        </Link>
+        </button>
         <Link href={"/cart"} className="text-black">
           <ShoppingCartOutlinedIcon />
         </Link>

@@ -6,6 +6,7 @@ import Link from "next/link";
 import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import ProfilEditModal from "@/components/ProfilEditModal";
 export default function Profile() {
+
   const router = useRouter();
   const [userId, setUserId] = useState(null);
 const [openModal, setOpenModal] = useState(false);

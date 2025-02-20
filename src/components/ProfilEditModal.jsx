@@ -6,9 +6,29 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
+import { useUpdateUserMutation } from '@/redux/apiSlice';
 
 export default function ProfilEditModal({ isOpen, onClose, data }) {
+  const [updateUser, { isLoading }] = useUpdateUserMutation(); 
+
   if (!isOpen) return null;
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const formJson = Object.fromEntries(formData.entries());
+    const updatedData = {
+      ...formJson,
+      age: parseInt(formJson.age, 10) || 0,
+    };
+    console.log("update", updatedData);
+    try {
+      await updateUser({ id: data.id, ...updatedData }).unwrap();
+      onClose();
+    } catch (error) {
+      console.error("Userni yangilashda xatolik:", error);
+    }
+  };
 
   return (
     <Dialog
@@ -16,15 +36,7 @@ export default function ProfilEditModal({ isOpen, onClose, data }) {
       onClose={onClose}
       PaperProps={{
         component: 'form',
-        onSubmit: (event) => {
-          event.preventDefault();
-          const formData = new FormData(event.currentTarget);
-          const formJson = Object.fromEntries(formData.entries());
-          console.log(formJson);
-          onClose();
-        },
-        // sx: { bgcolor: 'rgba(255, 255, 255, 0.9)', borderRadius: 2 },
-
+        onSubmit: handleSubmit,
       }}
     >
       <DialogTitle sx={{ color: '#ff9800' }}>Profilni tahrirlash</DialogTitle>
@@ -37,18 +49,18 @@ export default function ProfilEditModal({ isOpen, onClose, data }) {
             label="Ism"
             type="text"
             variant="outlined"
-            size='small'
+            size="small"
             defaultValue={data?.first_name || ''}
             sx={{ width: '300px' }}
           />
           <TextField
             margin="dense"
-            id="last_name"
-            name="last_name"
+            id="second_name"
+            name="second_name"
             label="Familiya"
             type="text"
             variant="outlined"
-            size='small'
+            size="small"
             defaultValue={data?.second_name || ''}
             sx={{ width: '300px' }}
           />
@@ -59,7 +71,7 @@ export default function ProfilEditModal({ isOpen, onClose, data }) {
             label="Yosh"
             type="number"
             variant="outlined"
-            size='small'
+            size="small"
             defaultValue={data?.age || ''}
             sx={{ width: '300px' }}
           />
@@ -70,7 +82,7 @@ export default function ProfilEditModal({ isOpen, onClose, data }) {
             label="Email"
             type="email"
             variant="outlined"
-            size='small'
+            size="small"
             defaultValue={data?.email || ''}
             sx={{ width: '300px' }}
           />
@@ -81,20 +93,20 @@ export default function ProfilEditModal({ isOpen, onClose, data }) {
             label="Manzil"
             type="text"
             variant="outlined"
-            size='small'
+            size="small"
             defaultValue={data?.address || ''}
             sx={{ width: '300px' }}
           />
           <TextField
             margin="dense"
-            id="phone"
-            name="phone"
+            id="phone_number"
+            name="phone_number"
             label="Telefon raqam"
             type="tel"
             variant="outlined"
             defaultValue={data?.phone_number || ''}
-            size='small'
-            sx={{ width: '300px', height:"50px" }}
+            size="small"
+            sx={{ width: '300px', height: "50px" }}
           />
         </Box>
       </DialogContent>
@@ -113,13 +125,14 @@ export default function ProfilEditModal({ isOpen, onClose, data }) {
         <Button
           type="submit"
           variant="contained"
+          disabled={isLoading}
           sx={{
-            bgcolor: '#ff9800', 
+            bgcolor: '#ff9800',
             color: 'white',
             '&:hover': { bgcolor: '#e68900' },
           }}
         >
-          Saqlash
+          {isLoading ? "Saqlanmoqda..." : "Saqlash"}
         </Button>
       </DialogActions>
     </Dialog>
