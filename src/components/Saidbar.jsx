@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useGetProductsQuery, useGetUserQuery } from "@/redux/apiSlice";
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -21,153 +19,157 @@ import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PeopleIcon from "@mui/icons-material/People";
-import CategoryIcon from "@mui/icons-material/Category";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Typography from "@mui/material/Typography";
+import EditProductModal from "./EditProduct";
+import EditUserModal from "./EditUser";
 
-export default function Sidebar() {
-  const [open, setOpen] = useState(false);
+const drawerWidth = 240;
+
+export default function AdminLayout() {
   const [selectedMenu, setSelectedMenu] = useState("users");
+  const [openProductModal, setOpenProductModal] = useState(false);
+  const [openUserModal, setOpenUserModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const { data: users, isLoading: userLoading, error: userError } = useGetUserQuery();
   const { data: products, isLoading: productLoading, error: productError } = useGetProductsQuery();
-
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
-  };
 
   const handleMenuClick = (menu) => {
     setSelectedMenu(menu);
   };
 
-  const handleEdit = (id) => {
-    alert(`Edit qilinmoqda: ${id}`);
+  const handleEditProductClick = (product) => {
+    setSelectedProduct(product);
+    setOpenProductModal(true);
   };
 
-  const handleDelete = (id) => {
-    alert(`O'chirildi: ${id}`);
+  const handleEditUserClick = (user) => {
+    setSelectedUser(user);
+    setOpenUserModal(true);
   };
 
-  const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation">
-      <List>
-        {[
-          { text: "Foydalanuvchilar", icon: <PeopleIcon />, key: "users" },
-          { text: "Mahsulotlar", icon: <ShoppingCartIcon />, key: "products" },
-          { text: "Kategoriyalar", icon: <CategoryIcon />, key: "categories" },
-        ].map((item, index) => (
-          <ListItem key={index} disablePadding>
-            <ListItemButton onClick={() => handleMenuClick(item.key)}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
-  );
+  const handleCloseProductModal = () => {
+    setOpenProductModal(false);
+  };
+
+  const handleCloseUserModal = () => {
+    setOpenUserModal(false);
+  };
 
   return (
-    <div className="flex">
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       {/* Sidebar */}
-      <Drawer open={open} onClose={toggleDrawer(false)}>
-        {DrawerList}
-      </Drawer>
+      <Box
+        sx={{
+          width: drawerWidth,
+          flexShrink: 0,
+          backgroundColor: "#f4f4f4",
+          p: 2,
+          borderRight: "1px solid #ddd",
+        }}
+      >
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Admin Panel
+        </Typography>
+        <List>
+          {[
+            { text: "Foydalanuvchilar", icon: <PeopleIcon />, key: "users" },
+            { text: "Mahsulotlar", icon: <ShoppingCartIcon />, key: "products" },
+          ].map((item, index) => (
+            <ListItem key={index} disablePadding>
+              <ListItemButton onClick={() => handleMenuClick(item.key)}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
 
-      <Button onClick={toggleDrawer(true)} variant="contained" className="m-4">
-        Menuni ochish
-      </Button>
-
-      {/* Content */}
-      <div className="ml-5 mt-5 w-full">
-        {selectedMenu === "users" && (
-          <div>
-            <h2 className="text-xl font-bold mb-2">Foydalanuvchilar</h2>
-            {userLoading ? (
-              <p>Yuklanmoqda...</p>
-            ) : userError ? (
-              <p>Xatolik yuz berdi</p>
-            ) : (
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Ism</TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>Harakatlar</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {users?.map((user) => (
-                      <TableRow key={user.id}>
-                        <TableCell>{user.id}</TableCell>
-                        <TableCell>{user.name}</TableCell>
-                        <TableCell>{user.email}</TableCell>
-                        <TableCell>
-                          <IconButton onClick={() => handleEdit(user.id)} color="primary">
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton onClick={() => handleDelete(user.id)} color="error">
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            )}
-          </div>
+      {/* Table content */}
+      <Box sx={{ flexGrow: 1, p: 3 }}>
+        {/* Mahsulotlar jadvali */}
+        {selectedMenu === "products" && products && (
+          <TableContainer component={Paper}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Mahsulotlar
+            </Typography>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Nomi</TableCell>
+                  <TableCell>Narxi</TableCell>
+                  <TableCell>Harakatlar</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {products.map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell>{product.id}</TableCell>
+                    <TableCell>{product.name}</TableCell>
+                    <TableCell>${product.price}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleEditProductClick(product)} color="primary">
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => alert(`Delete: ${product.id}`)} color="error">
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
 
-        {selectedMenu === "products" && (
-          <div>
-            <h2 className="text-xl font-bold mb-2">Mahsulotlar</h2>
-            {productLoading ? (
-              <p>Yuklanmoqda...</p>
-            ) : productError ? (
-              <p>Xatolik yuz berdi</p>
-            ) : (
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Nomi</TableCell>
-                      <TableCell>Narxi</TableCell>
-                      <TableCell>Harakatlar</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {products?.products?.map((product) => (
-                      <TableRow key={product.id}>
-                        <TableCell>{product.id}</TableCell>
-                        <TableCell>{product.name}</TableCell>
-                        <TableCell>${product.price}</TableCell>
-                        <TableCell>
-                          <IconButton onClick={() => handleEdit(product.id)} color="primary">
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton onClick={() => handleDelete(product.id)} color="error">
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            )}
-          </div>
+        {/* Foydalanuvchilar jadvali */}
+        {selectedMenu === "users" && users && (
+          <TableContainer component={Paper}>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              Foydalanuvchilar
+            </Typography>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Ism</TableCell>
+                  <TableCell>Familiya</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Yosh</TableCell>
+                  <TableCell>Harakatlar</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell>{user.id}</TableCell>
+                    <TableCell>{user.first_name}</TableCell>
+                    <TableCell>{user.second_name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.age}</TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleEditUserClick(user)} color="primary">
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => alert(`Delete: ${user.id}`)} color="error">
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         )}
+      </Box>
 
-        {selectedMenu === "categories" && (
-          <div>
-            <h2 className="text-xl font-bold mb-2">Kategoriyalar</h2>
-            <p>Hozircha kategoriya ma'lumotlari mavjud emas.</p>
-          </div>
-        )}
-      </div>
-    </div>
+      {/* Modallar */}
+      <EditProductModal open={openProductModal} handleClose={handleCloseProductModal} product={selectedProduct} />
+      <EditUserModal open={openUserModal} handleClose={handleCloseUserModal} user={selectedUser} />
+    </Box>
   );
 }
