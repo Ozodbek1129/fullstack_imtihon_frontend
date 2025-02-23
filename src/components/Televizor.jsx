@@ -15,9 +15,9 @@ export default function Computers() {
 
   useEffect(() => {
     if (data?.products) {
-      setProducts((prev) => [...prev, ...data.products]);
+      setProducts((prev) => (page === 1 ? data.products : [...prev, ...data.products]));
     }
-  }, [data]);
+  }, [data, page]);
 
   if (isLoading && page === 1) return <p>Yuklanmoqda...</p>;
   if (error) return <p>Xatolik: {error.message}</p>;
@@ -27,9 +27,9 @@ export default function Computers() {
       <div className="bg-orange-500 py-0.5">
         <h2 className="text-3xl pl-5 my-5 text-white">Televizorlar</h2>
       </div>
-      <div className="my-5 grid grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 max-sm:justify-center gap-5 px-5">
+      <div className="my-5 grid grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 max-sm:items-center gap-5 px-5">
         {products.map((e, index) => (
-          <MediaCard data={e} key={e.id || index} />
+          <MediaCard data={e} key={e.id || `${e.id}-${index}`} />
         ))}
       </div>
 

@@ -29,7 +29,7 @@ export default function ComboBox({ onSearch }) {
       onInputChange={handleSearch}
       sx={{ width: 250 }}
       renderInput={(params) => (
-        <TextField {...params} size="small" label="Search products or categories" />
+        <TextField {...params} size="small" label="Qidirish" />
       )}
     />
   );

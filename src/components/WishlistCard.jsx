@@ -16,10 +16,12 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import Link from "next/link";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import { useRouter } from "next/navigation";
 
 export default function WishlistCard({ data = {} }) {
   const { product } = data;
-  const {id, is_like} = product;
+  const { id, is_like } = product;
+  const router = useRouter();
   const [updateLike] = useUpdateLikeMutation();
   const [addwishlist] = useAddWishlistMutation();
   const [deleteWishlist] = useDeleteWishlistMutation();
@@ -42,9 +44,13 @@ export default function WishlistCard({ data = {} }) {
       setLiked((prev) => !prev);
     }
   };
-  console.log("wish", product);
+  const handleClick = (event) => {
+    router.push(`/product/${id}`);
+  };
   return (
-    <Card sx={{ maxWidth: 250, border: "1px solid #FFA500" }}>
+    <Card
+      sx={{ maxWidth: 250, border: "1px solid #FFA500", marginBottom: "40px" }}
+    >
       <CardMedia
         sx={{ height: 140 }}
         image={`http://localhost:4000${product.image}`}
@@ -69,14 +75,17 @@ export default function WishlistCard({ data = {} }) {
         >
           {product.description}
         </Typography>
+        <Typography gutterBottom variant="h6" component="div" color="black">
+          {product.price} so'm
+        </Typography>
       </CardContent>
       <CardActions className="flex items-end  gap-5">
         <button className="mt-2 text-red-500" onClick={handleLikeClick}>
           {liked ? <FavoriteIcon /> : <FavoriteBorderOutlinedIcon />}
         </button>
-        <Link href={"/details"} className="text-black">
+        <button onClick={handleClick} className="text-black">
           <RemoveRedEyeOutlinedIcon />
-        </Link>
+        </button>
         <Link href={"/cart"} className="text-black">
           <ShoppingCartOutlinedIcon />
         </Link>

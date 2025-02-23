@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MediaCard from "./Card";
 import { useGetProductsByCategoryQuery } from "@/redux/apiSlice";
 
@@ -8,14 +8,18 @@ export default function Computers() {
   const [page, setPage] = useState(1);
   const [products, setProducts] = useState([]);
 
-  const { data, error, isLoading } = useGetProductsByCategoryQuery({
-    id,
-    page,
-  });
+  const { data, error, isLoading } = useGetProductsByCategoryQuery({ id, page });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data?.products) {
-      setProducts((prev) => [...prev, ...data.products]); 
+      setProducts((prev) => {
+        const uniqueProducts = [...prev, ...data.products].reduce((acc, item) => {
+          acc.set(item.id, item);
+          return acc;
+        }, new Map());
+
+        return Array.from(uniqueProducts.values());
+      });
     }
   }, [data]);
 
@@ -28,8 +32,8 @@ export default function Computers() {
         <h2 className="text-3xl pl-5 my-5 text-white">Kompyuterlar</h2>
       </div>
       <div className="my-5 grid grid-cols-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1 max-sm:justify-center gap-5 px-5">
-        {products.map((e, index) => (
-          <MediaCard data={e} key={e.id || index} />
+        {products.map((e) => (
+          <MediaCard data={e} key={e.id} />
         ))}
       </div>
 

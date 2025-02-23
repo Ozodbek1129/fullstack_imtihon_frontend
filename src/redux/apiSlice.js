@@ -14,7 +14,7 @@ export const apiSlice = createApi({
   }),
   endpoints: (builder) => ({
     getProducts: builder.query({
-      query: () => `/products`,
+      query: () => `/products?limit=100`,
     }),
     updateLike: builder.mutation({
       query: ({ id, is_like }) => ({
@@ -49,6 +49,12 @@ export const apiSlice = createApi({
         body,
       }),
     }),
+    deleteUser: builder.mutation({
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: "DELETE",
+      }),
+    }),
     getWishlist: builder.query({
       query: () => `/wishlist?user_id=${1}`,
     }),
@@ -79,10 +85,56 @@ export const apiSlice = createApi({
     getOneProduct: builder.query({
       query: (id)=> `/products/${id}`
     }),
+    getAllProduct: builder.query({
+      query: ()=> `/products/getAll`
+    }),
+    updateProduct: builder.mutation({
+      query: (body) => ({
+        url: `/products/${body.id}`,
+        method: "PATCH",
+        body,
+      }),
+    }),
+    deleteProduct: builder.mutation({
+      query: (id) => ({
+        url: `/products/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    register: builder.mutation({
+      query: (userData) => ({
+        url: "/users/register",
+        method: "POST",
+        body: userData,
+      }),
+    }),
+
+    addToCart: builder.mutation({
+      query: (product) => ({
+        url: "/cart",
+        method: "POST",
+        body: product,
+      }),
+      invalidatesTags: ["Cart"],
+    }),
+  
+    getCart: builder.query({
+      query: () => 'cart',
+    }),
+    removeFromCart: builder.mutation({
+      query: (id) => ({
+        url: `cart/${id}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
 export const {
+  useGetCartQuery,
+  useRemoveFromCartMutation,
+  useAddToCartMutation,
+  useRegisterMutation,
   useGetAllCategoryQuery,
   useGetOneProductQuery,
   useGetProductsQuery,
@@ -95,5 +147,9 @@ export const {
   useDeleteWishlistMutation,
   useGetWishlistQuery,
   useUpdateUserMutation,
+  useDeleteUserMutation,
   useGetProductsByCategoryQuery,
+  useGetAllProductQuery,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
 } = apiSlice;

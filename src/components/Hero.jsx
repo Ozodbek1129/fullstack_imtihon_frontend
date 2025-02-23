@@ -10,12 +10,12 @@ import WatchOutlinedIcon from "@mui/icons-material/WatchOutlined";
 import EarbudsOutlinedIcon from "@mui/icons-material/EarbudsOutlined";
 
 const categoryIcons = {
-  Telefonlar: <SmartphoneIcon />,
-  Kompyuterlar: <ComputerOutlinedIcon />,
-  Televizorlar: <TvOutlinedIcon />,
-  Quloqchinlar: <HeadphonesOutlinedIcon />,
-  Soatlar: <WatchOutlinedIcon />,
-  Aksessuarlar: <EarbudsOutlinedIcon />,
+  telefonlar: <SmartphoneIcon />,
+  kompyuterlar: <ComputerOutlinedIcon />,
+  televizorlar: <TvOutlinedIcon />,
+  quloqchinlar: <HeadphonesOutlinedIcon />,
+  soatlar: <WatchOutlinedIcon />,
+  aksessuarlar: <EarbudsOutlinedIcon />,
 };
 
 export default function Hero() {
@@ -24,7 +24,7 @@ export default function Hero() {
   if (error) return <p>Xatolik yuz berdi!</p>;
 
   return (
-    <div className="py-10 bg-orange-500 text-white">
+    <div className="py-10 bg-orange-500 text-white mt-10 max-md:mt-5">
       <div className="flex justify-around">
         {categories?.map((category) => (
           <Link

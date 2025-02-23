@@ -14,7 +14,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useRouter } from "next/navigation";
 
 export default function MediaCard({ data = {} }) {
-  let { id, name, description, image, is_like } = data;
+  let { id, name, description, image, is_like, price } = data;
 const router = useRouter()
   const [updateLike] = useUpdateLikeMutation();
 const [addwishlist] = useAddWishlistMutation();
@@ -67,6 +67,9 @@ const [deleteWishlist] = useDeleteWishlistMutation();
           }}
         >
           {description}
+        </Typography>
+        <Typography gutterBottom variant="h6" component="div" color="black">
+          {price} so'm
         </Typography>
       </CardContent>
       <CardActions className="flex items-end  gap-5">
